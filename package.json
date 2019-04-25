@@ -1,6 +1,6 @@
 {
   "name": "vue-image-box",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lightweight and simple image gallery component for Vue.js",
   "author": "Adam Romig",
   "license": "MIT",
