@@ -8,6 +8,10 @@ Demo: [vue-image-box.netlify.com](https://vue-image-box.netlify.com)
 
 ## Installation
 
+CDN
+
+`<script src="https://unpkg.com/vue-image-box"></script>
+
 NPM
 
 `npm install vue-image-box`
