@@ -6,11 +6,13 @@ Images can be cycled throgh using the left & right arrow keys, and closed with t
 
 Demo: [vue-image-box.netlify.com](https://vue-image-box.netlify.com)
 
+![Demo Gif](images/vue-image-box_demo.gif)
+
 ## Installation
 
 CDN
 
-`<script src="https://unpkg.com/vue-image-box"></script>
+`<script src="https://unpkg.com/vue-image-box"></script>`
 
 NPM
 
