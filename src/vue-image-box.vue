@@ -1,6 +1,11 @@
 <template>
   <transition name="image-box">
-    <div class="imgBox" @click="close" v-if="imageIndex !== null">
+    <div
+      class="imgBox"
+      @click="close"
+      v-if="imageIndex !== null"
+      :style="imgBox_style"
+    >
       <button type="button" class="imgBox__close" @click="close">
         &times;
       </button>
@@ -31,7 +36,7 @@
 
 <script>
 export default {
-  props: ["images", "index"],
+  props: ["images", "index", "bgcolor"],
   data() {
     return {
       imageIndex: this.index,
@@ -81,6 +86,11 @@ export default {
     },
     hasMultipleImages() {
       return this.images.length > 1;
+    },
+    imgBox_style() {
+      let style = "";
+      if (this.bgcolor !== null) style += `background-color: ${this.bgcolor};`;
+      return style;
     }
   }
 };
