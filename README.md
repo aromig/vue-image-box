@@ -2,7 +2,7 @@
 
 Lightweight and simple-ish image gallery component for Vue.js.
 
-Images can be cycled throgh using the left & right arrow keys, and closed with the escape key.
+Images can be cycled through using the left & right arrow keys, and closed with the escape key.
 
 Demo: [vue-image-box.netlify.com](https://vue-image-box.netlify.com)
 
@@ -22,6 +22,8 @@ NPM
 
 This component works by waiting for `index` to be populated with a non-null value. Images are constructed from an array of URLs (`images`) and the click handler updates the value of `index`, triggering the display of the larger modal of the image.
 
+The background color of the modal can be customized with the `bgcolor` prop. And valid color value can be passed to it: hex, rgb, rgba, hsl, etc...
+
 Vue Template:
 
 ```html
@@ -31,9 +33,14 @@ Vue Template:
       v-for="(image, idx) in images"
       :key="idx"
       :src="image"
-      @click="onClick(idx)"
+      @click="showImage(idx)"
     />
-    <ImageBox :images="images" :index="index" @close="index = null"></ImageBox>
+    <ImageBox
+      :images="images"
+      :index="index"
+      @close="index = null"
+      :bgcolor="bgcolor"
+    ></ImageBox>
   </div>
 </template>
 ```
@@ -49,13 +56,14 @@ export default {
     ImageBox
   },
   methods: {
-    onClick: function(idx) {
+    showImage: function(idx) {
       this.index = idx;
     }
   },
   data() {
     return {
       index: null,
+      bgcolor: "rgba(51, 102, 153, .9)",
       images: [
         "https://placekitten.com/800/800",
         "https://placekitten.com/825/800",
