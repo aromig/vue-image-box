@@ -50,8 +50,7 @@ export default {
   props: ["images", "index", "bgcolor"],
   data() {
     return {
-      imageIndex: this.index,
-      image: null
+      imageIndex: this.index
     };
   },
   mounted() {

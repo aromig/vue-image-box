@@ -32,15 +32,11 @@ NPM
   - _string_
   - Value: Any color (e.g. #000000, rgba(0, 0, 0, .8), hsla(0, 0%, 0%, .8), etc)
 
-### methods available
+### events available
 
 - v-on:close
   - Current image closed (clicked X or pressed ESC)
   - Recommended: Set `index` value (from `data()`) to null
-- v-on:previousImage
-  - Current image changed to previous (index - 1, loops back to end of array)
-- v-on:nextImage
-  - Current image changed to next (index + 1, loops back to start of array)
 
 ### Example
 
