@@ -18,9 +18,20 @@
         &lsaquo;
       </button>
       <div class="imgBox__container" v-if="images">
-        <transition name="image-fade">
-          <img :src="imageUrl" :key="imageUrl" @click.stop="nextImage" />
-        </transition>
+        <figure>
+          <transition name="image-fade">
+            <img
+              :src="imageUrl"
+              :key="imageUrl"
+              @click.stop="nextImage"
+              :title="imageCaption"
+              :alt="imageCaption"
+            />
+          </transition>
+          <figcaption>
+            {{ imageCaption }}
+          </figcaption>
+        </figure>
       </div>
       <button
         type="button"
@@ -82,7 +93,10 @@ export default {
   },
   computed: {
     imageUrl() {
-      return this.images[this.imageIndex];
+      return this.images[this.imageIndex].imageUrl;
+    },
+    imageCaption() {
+      return this.images[this.imageIndex].caption;
     },
     hasMultipleImages() {
       return this.images.length > 1;
@@ -106,9 +120,6 @@ $modal__bg: rgba($black, 0.9);
   transition: opacity 0.2s ease;
   position: fixed;
   z-index: 1000;
-}
-@mixin modal__mask() {
-  @include modal__base();
   top: 0;
   left: 0;
   width: 100%;
@@ -125,30 +136,44 @@ $modal__bg: rgba($black, 0.9);
 
 // Modal Container & Image
 .imgBox {
-  @include modal__mask();
+  @include modal__base();
   &__container {
     position: absolute;
     overflow: hidden;
     cursor: pointer;
     max-width: 100vw;
     height: 100vh;
-    margin: auto;
+    margin: 1rem auto;
     left: 0.5rem;
     right: 0.5rem;
   }
-  & img {
-    width: 100%;
+  & figure {
+    margin: 0;
     height: 100%;
-    object-fit: contain;
+    img {
+      margin-top: 3rem;
+      height: 100%;
+      width: 100%;
+      height: calc(100% - 4.5rem);
+      object-fit: contain;
+    }
+    figcaption {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      line-height: 2.5rem;
+      background-color: rgba(0, 0, 0, 0.25);
+      color: $white;
+    }
   }
   &__close {
     color: $white;
     position: absolute;
-    top: 0;
+    top: 5px;
     right: 0;
     background-color: transparent;
     border: none;
-    font-size: 25px;
+    font-size: 48px;
     width: 50px;
     height: 50px;
     cursor: pointer;
@@ -167,7 +192,8 @@ $modal__bg: rgba($black, 0.9);
     z-index: 900;
     cursor: pointer;
     color: $white;
-    font-size: 40px;
+    font-size: 64px;
+    line-height: 64px;
     background-color: transparent;
     border: none;
     &:focus {
@@ -189,20 +215,5 @@ $modal__bg: rgba($black, 0.9);
 
 .image-fade-enter-active {
   transition: all 0.5s ease;
-}
-
-@media (max-width: 500px) {
-  .imgBox {
-    &__close {
-      top: 85vh;
-      right: calc(50% - 36px);
-      font-size: 36px;
-    }
-    &__previous,
-    &__next {
-      top: 80vh;
-      font-size: 64px;
-    }
-  }
 }
 </style>

@@ -2,7 +2,7 @@
 
 Lightweight and simple-ish image gallery component for Vue.js.
 
-Images can be cycled through using the left & right arrow keys, and closed with the escape key.
+Images can also be cycled through using the left & right arrow keys, and closed with the escape key.
 
 Demo: [vue-image-box.netlify.com](https://vue-image-box.netlify.com)
 
@@ -18,11 +18,33 @@ NPM
 
 `npm install vue-image-box`
 
-## Example usage
+## Usage
 
-This component works by waiting for `index` to be populated with a non-null value. Images are constructed from an array of URLs (`images`) and the click handler updates the value of `index`, triggering the display of the larger modal of the image.
+### props to send
 
-The background color of the modal can be customized with the `bgcolor` prop. And valid color value can be passed to it: hex, rgb, rgba, hsl, etc...
+- images
+  - _object array_
+  - Object Members: imageURL, thumbURL, caption
+- index
+  - _int_
+  - Value: set to null
+- bgcolor
+  - _string_
+  - Value: Any color (e.g. #000000, rgba(0, 0, 0, .8), hsla(0, 0%, 0%, .8), etc)
+
+### methods available
+
+- v-on:close
+  - Current image closed (clicked X or pressed ESC)
+  - Recommended: Set `index` value (from `data()`) to null
+- v-on:previousImage
+  - Current image changed to previous (index - 1, loops back to end of array)
+- v-on:nextImage
+  - Current image changed to next (index + 1, loops back to start of array)
+
+### Example
+
+This component works by waiting for `index` to be populated with a non-null value and displaying the full-size image associated with that index. Images are constructed from the (`images`) object array and the click handler updates the value of `index`, triggering the display of the larger modal of the image.
 
 Vue Template:
 
@@ -32,8 +54,10 @@ Vue Template:
     <img
       v-for="(image, idx) in images"
       :key="idx"
-      :src="image"
+      :src="image.thumbUrl"
       @click="showImage(idx)"
+      :alt="image.caption"
+      :title="image.caption"
     />
     <ImageBox
       :images="images"
@@ -45,9 +69,8 @@ Vue Template:
 </template>
 ```
 
-JavaScript:
-
 ```javascript
+<script>
 import ImageBox from "vue-image-box";
 
 export default {
@@ -63,15 +86,28 @@ export default {
   data() {
     return {
       index: null,
-      bgcolor: "rgba(51, 102, 153, .9)",
+      bgcolor: "rgba(51, 51, 51, .9)",
       images: [
-        "https://placekitten.com/800/800",
-        "https://placekitten.com/825/800",
-        "https://placekitten.com/803/800"
+        {
+          imageUrl: "https://placekitten.com/800/600",
+          thumbUrl: "https://placekitten.com/800/600",
+          caption: "kitten #1"
+        },
+        {
+          imageUrl: "https://placekitten.com/825/600",
+          thumbUrl: "https://placekitten.com/825/600",
+          caption: "kitten #2"
+        },
+        {
+          imageUrl: "https://placekitten.com/803/600",
+          thumbUrl: "https://placekitten.com/803/600",
+          caption: "kitten #3"
+        }
       ]
     };
   }
 };
+</script>
 ```
 
 ## Author
