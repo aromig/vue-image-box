@@ -1,12 +1,17 @@
 # vue-image-box
 
+## Description
+
 Lightweight and simple-ish image gallery component for Vue.js.
 
 Images can also be cycled through using the left & right arrow keys, and closed with the escape key.
 
-Demo: [vue-image-box.netlify.com](https://vue-image-box.netlify.com)
-
 ![Demo Gif](images/vue-image-box_demo.gif)
+
+### Sites using vue-image-box
+
+- [Demo Site](https://vue-image-box.netlify.com)
+- [My Cakes](https://cakes.romig.dev)
 
 ## Installation
 
