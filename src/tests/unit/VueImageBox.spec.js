@@ -3,6 +3,7 @@ import VueImageBox from "../../vue-image-box.vue";
 
 const localVue = createLocalVue();
 let images = [];
+let wrapper;
 
 describe("Images Array", () => {
   beforeEach(() => {
@@ -10,7 +11,7 @@ describe("Images Array", () => {
   });
 
   test("If only one record, hasMultipleImages is false", () => {
-    const wrapper = shallowMount(VueImageBox, {
+    wrapper = shallowMount(VueImageBox, {
       localVue,
       propsData: { images: images, index: 0 }
     });
@@ -18,7 +19,7 @@ describe("Images Array", () => {
   });
 
   test("If only one record, do not display previous & next buttons", () => {
-    const wrapper = shallowMount(VueImageBox, {
+    wrapper = shallowMount(VueImageBox, {
       localVue,
       propsData: { images: images, index: 0 }
     });
@@ -28,7 +29,7 @@ describe("Images Array", () => {
 
   test("If more than one record, hasMultipleImages is true", () => {
     images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
-    const wrapper = shallowMount(VueImageBox, {
+    wrapper = shallowMount(VueImageBox, {
       localVue,
       propsData: { images: images, index: 0 }
     });
@@ -37,7 +38,7 @@ describe("Images Array", () => {
 
   test("If more than one record, display previous & next buttons", () => {
     images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
-    const wrapper = shallowMount(VueImageBox, {
+    wrapper = shallowMount(VueImageBox, {
       localVue,
       propsData: { images: images, index: 0 }
     });
@@ -54,11 +55,11 @@ describe("Button Clicks", () => {
 
   test("Clicking 'previous image' button should call previousImage()", () => {
     images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
-    const previousImage = jest.fn();
-    const wrapper = shallowMount(VueImageBox, {
+    wrapper = shallowMount(VueImageBox, {
       localVue,
       propsData: { images: images, index: 0 }
     });
+    const previousImage = jest.fn();
     wrapper.setMethods({ previousImage: previousImage });
     wrapper.find(".imgBox__previous").trigger("click");
     expect(previousImage).toHaveBeenCalled();
@@ -66,11 +67,11 @@ describe("Button Clicks", () => {
 
   test("Clicking 'next image' button should call nextImage()", () => {
     images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
-    const nextImage = jest.fn();
-    const wrapper = shallowMount(VueImageBox, {
+    wrapper = shallowMount(VueImageBox, {
       localVue,
       propsData: { images: images, index: 0 }
     });
+    const nextImage = jest.fn();
     wrapper.setMethods({ nextImage: nextImage });
     wrapper.find(".imgBox__next").trigger("click");
     expect(nextImage).toHaveBeenCalled();
@@ -78,10 +79,6 @@ describe("Button Clicks", () => {
 
   test("Clicking 'X' button should call close()", () => {
     const close = jest.fn();
-    const wrapper = shallowMount(VueImageBox, {
-      localVue,
-      propsData: { images: images, index: 0 }
-    });
     wrapper.setMethods({ close: close });
     wrapper.find(".imgBox__close").trigger("click");
     expect(close).toHaveBeenCalled();
@@ -91,15 +88,15 @@ describe("Button Clicks", () => {
 describe("Keyboard Events", () => {
   beforeEach(() => {
     images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
-  });
-
-  test("Pressing the Left Arrow key should call previousImage()", () => {
-    const previousImage = jest.fn();
-    const wrapper = shallowMount(VueImageBox, {
+    wrapper = shallowMount(VueImageBox, {
       localVue,
       propsData: { images: images, index: 0 },
       attachToDocument: true
     });
+  });
+
+  test("Pressing the Left Arrow key should call previousImage()", () => {
+    const previousImage = jest.fn();
     wrapper.setMethods({ previousImage: previousImage });
     wrapper.trigger("keydown.left");
     expect(previousImage).toHaveBeenCalled();
@@ -107,11 +104,6 @@ describe("Keyboard Events", () => {
 
   test("Pressing the Right Arrow key should call nextImage()", () => {
     const nextImage = jest.fn();
-    const wrapper = shallowMount(VueImageBox, {
-      localVue,
-      propsData: { images: images, index: 0 },
-      attachToDocument: true
-    });
     wrapper.setMethods({ nextImage: nextImage });
     wrapper.trigger("keydown.right");
     expect(nextImage).toHaveBeenCalled();
@@ -119,13 +111,82 @@ describe("Keyboard Events", () => {
 
   test("Pressing the ESC key should call close()", () => {
     const close = jest.fn();
-    const wrapper = shallowMount(VueImageBox, {
-      localVue,
-      propsData: { images: images, index: 0 },
-      attachToDocument: true
-    });
+
     wrapper.setMethods({ close: close });
     wrapper.trigger("keydown.esc");
     expect(close).toHaveBeenCalled();
+  });
+});
+
+describe("Methods", () => {
+  beforeEach(() => {
+    images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
+  });
+
+  test("previousImage() should decrement imageIndex by 1", () => {
+    images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
+    wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 }
+    });
+    wrapper.setData({ imageIndex: 1 });
+    wrapper.vm.previousImage();
+    expect(wrapper.vm.imageIndex).toBe(0);
+  });
+
+  test("If currently at first image, previousImage() should set imageIndex to the last image's index", () => {
+    images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
+    images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
+    const lastIndex = images.length - 1;
+    wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 }
+    });
+    wrapper.setData({ imageIndex: 0 });
+    wrapper.vm.previousImage();
+    expect(wrapper.vm.imageIndex).toBe(lastIndex);
+  });
+
+  test("nextImage() should increment imageIndex by 1", () => {
+    images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
+    wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 }
+    });
+    wrapper.setData({ imageIndex: 0 });
+    wrapper.vm.nextImage();
+    expect(wrapper.vm.imageIndex).toBe(1);
+  });
+
+  test("If currently at the last image, nextImage() should set imageIndex to the first image's index", () => {
+    images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
+    images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
+    wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 }
+    });
+    wrapper.setData({ imageIndex: 2 });
+    wrapper.vm.nextImage();
+    expect(wrapper.vm.imageIndex).toBe(0);
+  });
+
+  test("close() should set imageIndex to null", () => {
+    wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 }
+    });
+    wrapper.setData({ imageIndex: 0 });
+    wrapper.vm.close();
+    expect(wrapper.vm.imageIndex).toBe(null);
+  });
+
+  test("close() should hide the imgBox div", () => {
+    wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 }
+    });
+    wrapper.setData({ imageIndex: 0 });
+    wrapper.vm.close();
+    expect(wrapper.find(".imgBox").exists()).toBe(false);
   });
 });
