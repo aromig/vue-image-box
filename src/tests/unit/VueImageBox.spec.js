@@ -8,7 +8,54 @@ let images = [
   { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }
 ];
 
-describe("Buttons", () => {
+describe("Images Array", () => {
+  test("If only one record, hasMultipleImages is false", () => {
+    images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
+    const wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 }
+    });
+    expect(wrapper.vm.hasMultipleImages).toBe(false);
+  });
+
+  test("If only one record, do not display previous & next buttons", () => {
+    images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
+    const wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 }
+    });
+    expect(wrapper.find(".imgBox__previous").exists()).toBe(false);
+    expect(wrapper.find(".imgBox__next").exists()).toBe(false);
+  });
+
+  test("If more than one record, hasMultipleImages is true", () => {
+    images = [
+      { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" },
+      { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }
+    ];
+    const wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 }
+    });
+    expect(wrapper.vm.hasMultipleImages).toBe(true);
+  });
+
+  test("If more than one record, display previous & next buttons", () => {
+    images = [
+      { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" },
+      { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }
+    ];
+    const wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 }
+    });
+    expect(wrapper.vm.hasMultipleImages).toBe(true);
+    expect(wrapper.find(".imgBox__previous").exists()).toBe(true);
+    expect(wrapper.find(".imgBox__next").exists()).toBe(true);
+  });
+});
+
+describe("Button Clicks", () => {
   test("Clicking 'previous image' button should call previousImage()", () => {
     const previousImage = jest.fn();
     const wrapper = shallowMount(VueImageBox, {
@@ -41,51 +88,47 @@ describe("Buttons", () => {
     wrapper.find(".imgBox__close").trigger("click");
     expect(close).toHaveBeenCalled();
   });
+});
 
-  describe("Images array size", () => {
-    test("If only one record, hasMultipleImages is false", () => {
-      images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
-      const wrapper = shallowMount(VueImageBox, {
-        localVue,
-        propsData: { images: images, index: 0 }
-      });
-      expect(wrapper.vm.hasMultipleImages).toBe(false);
-    });
+describe("Keyboard Events", () => {
+  images = [
+    { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" },
+    { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }
+  ];
 
-    test("If only one record, do not display previous & next buttons", () => {
-      images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
-      const wrapper = shallowMount(VueImageBox, {
-        localVue,
-        propsData: { images: images, index: 0 }
-      });
-      expect(wrapper.find(".imgBox__previous").exists()).toBe(false);
-      expect(wrapper.find(".imgBox__next").exists()).toBe(false);
+  test("Pressing the Left Arrow key should call previousImage()", () => {
+    const previousImage = jest.fn();
+    const wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 },
+      attachToDocument: true
     });
+    wrapper.setMethods({ previousImage: previousImage });
+    wrapper.trigger("keydown.left");
+    expect(previousImage).toHaveBeenCalled();
+  });
 
-    test("If more than one record, hasMultipleImages is true", () => {
-      images = [
-        { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" },
-        { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }
-      ];
-      const wrapper = shallowMount(VueImageBox, {
-        localVue,
-        propsData: { images: images, index: 0 }
-      });
-      expect(wrapper.vm.hasMultipleImages).toBe(true);
+  test("Pressing the Right Arrow key should call nextImage()", () => {
+    const nextImage = jest.fn();
+    const wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 },
+      attachToDocument: true
     });
+    wrapper.setMethods({ nextImage: nextImage });
+    wrapper.trigger("keydown.right");
+    expect(nextImage).toHaveBeenCalled();
+  });
 
-    test("If more than one record, display previous & next buttons", () => {
-      images = [
-        { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" },
-        { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }
-      ];
-      const wrapper = shallowMount(VueImageBox, {
-        localVue,
-        propsData: { images: images, index: 0 }
-      });
-      expect(wrapper.vm.hasMultipleImages).toBe(true);
-      expect(wrapper.find(".imgBox__previous").exists()).toBe(true);
-      expect(wrapper.find(".imgBox__next").exists()).toBe(true);
+  test("Pressing the ESC key should call close()", () => {
+    const close = jest.fn();
+    const wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 },
+      attachToDocument: true
     });
+    wrapper.setMethods({ close: close });
+    wrapper.trigger("keydown.esc");
+    expect(close).toHaveBeenCalled();
   });
 });
