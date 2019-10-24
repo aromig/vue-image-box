@@ -2,14 +2,14 @@ import { shallowMount, createLocalVue } from "@vue/test-utils";
 import VueImageBox from "../../vue-image-box.vue";
 
 const localVue = createLocalVue();
-let images = [
-  { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" },
-  { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }
-];
+let images = [];
 
 describe("Images Array", () => {
-  test("If only one record, hasMultipleImages is false", () => {
+  beforeEach(() => {
     images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
+  });
+
+  test("If only one record, hasMultipleImages is false", () => {
     const wrapper = shallowMount(VueImageBox, {
       localVue,
       propsData: { images: images, index: 0 }
@@ -18,7 +18,6 @@ describe("Images Array", () => {
   });
 
   test("If only one record, do not display previous & next buttons", () => {
-    images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
     const wrapper = shallowMount(VueImageBox, {
       localVue,
       propsData: { images: images, index: 0 }
@@ -28,10 +27,7 @@ describe("Images Array", () => {
   });
 
   test("If more than one record, hasMultipleImages is true", () => {
-    images = [
-      { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" },
-      { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }
-    ];
+    images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
     const wrapper = shallowMount(VueImageBox, {
       localVue,
       propsData: { images: images, index: 0 }
@@ -40,10 +36,7 @@ describe("Images Array", () => {
   });
 
   test("If more than one record, display previous & next buttons", () => {
-    images = [
-      { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" },
-      { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }
-    ];
+    images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
     const wrapper = shallowMount(VueImageBox, {
       localVue,
       propsData: { images: images, index: 0 }
@@ -55,7 +48,12 @@ describe("Images Array", () => {
 });
 
 describe("Button Clicks", () => {
+  beforeEach(() => {
+    images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
+  });
+
   test("Clicking 'previous image' button should call previousImage()", () => {
+    images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
     const previousImage = jest.fn();
     const wrapper = shallowMount(VueImageBox, {
       localVue,
@@ -67,6 +65,7 @@ describe("Button Clicks", () => {
   });
 
   test("Clicking 'next image' button should call nextImage()", () => {
+    images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
     const nextImage = jest.fn();
     const wrapper = shallowMount(VueImageBox, {
       localVue,
@@ -90,10 +89,9 @@ describe("Button Clicks", () => {
 });
 
 describe("Keyboard Events", () => {
-  images = [
-    { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" },
-    { imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }
-  ];
+  beforeEach(() => {
+    images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
+  });
 
   test("Pressing the Left Arrow key should call previousImage()", () => {
     const previousImage = jest.fn();
