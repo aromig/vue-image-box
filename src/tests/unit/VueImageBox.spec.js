@@ -1,5 +1,4 @@
 import { shallowMount, createLocalVue } from "@vue/test-utils";
-import sinon from "sinon";
 import VueImageBox from "../../vue-image-box.vue";
 
 const localVue = createLocalVue();
