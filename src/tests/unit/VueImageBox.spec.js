@@ -118,12 +118,12 @@ describe("Keyboard Events", () => {
   });
 });
 
-describe("Methods", () => {
+describe("previousImage()", () => {
   beforeEach(() => {
     images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
   });
 
-  test("previousImage() should decrement imageIndex by 1", () => {
+  test("should decrement imageIndex by 1", () => {
     images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
     wrapper = shallowMount(VueImageBox, {
       localVue,
@@ -134,7 +134,7 @@ describe("Methods", () => {
     expect(wrapper.vm.imageIndex).toBe(0);
   });
 
-  test("If currently at first image, previousImage() should set imageIndex to the last image's index", () => {
+  test("should set imageIndex to the last image's index, if currently at first image", () => {
     images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
     images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
     const lastIndex = images.length - 1;
@@ -147,7 +147,26 @@ describe("Methods", () => {
     expect(wrapper.vm.imageIndex).toBe(lastIndex);
   });
 
-  test("nextImage() should increment imageIndex by 1", () => {
+  test("from [2] should call preLoad() with imageUrl of [0]", () => {
+    images.push({ imageUrl: "yyyy", thumbUrl: "yyyy", caption: "yyyy" });
+    images.push({ imageUrl: "zzzz", thumbUrl: "zzzz", caption: "zzzz" });
+    wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 }
+    });
+    wrapper.setData({ imageIndex: 2 });
+    wrapper.vm.preLoad = jest.fn();
+    wrapper.vm.previousImage();
+    expect(wrapper.vm.preLoad).toHaveBeenCalledWith("xxxx");
+  });
+});
+
+describe("nextImage()", () => {
+  beforeEach(() => {
+    images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
+  });
+
+  test("should increment imageIndex by 1", () => {
     images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
     wrapper = shallowMount(VueImageBox, {
       localVue,
@@ -158,7 +177,7 @@ describe("Methods", () => {
     expect(wrapper.vm.imageIndex).toBe(1);
   });
 
-  test("If currently at the last image, nextImage() should set imageIndex to the first image's index", () => {
+  test("should set imageIndex to the first image's index, if currently at the last image", () => {
     images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
     images.push({ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" });
     wrapper = shallowMount(VueImageBox, {
@@ -170,7 +189,26 @@ describe("Methods", () => {
     expect(wrapper.vm.imageIndex).toBe(0);
   });
 
-  test("close() should set imageIndex to null", () => {
+  test("from [0] should call preLoad with imageUrl of [2]", () => {
+    images.push({ imageUrl: "yyyy", thumbUrl: "yyyy", caption: "yyyy" });
+    images.push({ imageUrl: "zzzz", thumbUrl: "zzzz", caption: "zzzz" });
+    wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 }
+    });
+    wrapper.setData({ imageIndex: 0 });
+    wrapper.vm.preLoad = jest.fn();
+    wrapper.vm.nextImage();
+    expect(wrapper.vm.preLoad).toHaveBeenCalledWith("zzzz");
+  });
+});
+
+describe("close()", () => {
+  beforeEach(() => {
+    images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
+  });
+
+  test("should set imageIndex to null", () => {
     wrapper = shallowMount(VueImageBox, {
       localVue,
       propsData: { images: images, index: 0 }
@@ -180,7 +218,7 @@ describe("Methods", () => {
     expect(wrapper.vm.imageIndex).toBe(null);
   });
 
-  test("close() should hide the imgBox div", () => {
+  test("should hide the imgBox div", () => {
     wrapper = shallowMount(VueImageBox, {
       localVue,
       propsData: { images: images, index: 0 }
@@ -188,5 +226,23 @@ describe("Methods", () => {
     wrapper.setData({ imageIndex: 0 });
     wrapper.vm.close();
     expect(wrapper.find(".imgBox").exists()).toBe(false);
+  });
+});
+
+describe("mounted()", () => {
+  beforeEach(() => {
+    images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
+  });
+
+  test("should have called preLoad using the first imageUrl", () => {
+    images.push({ imageUrl: "yyyy", thumbUrl: "yyyy", caption: "yyyy" });
+    images.push({ imageUrl: "zzzz", thumbUrl: "zzzz", caption: "zzzz" });
+    const preLoad = jest.fn();
+    wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: images, index: 0 },
+      methods: { preLoad }
+    });
+    expect(preLoad).toHaveBeenCalledWith("xxxx");
   });
 });
