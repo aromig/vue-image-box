@@ -90,7 +90,9 @@ export default {
     });
 
     // Preload the first image
-    this.preLoad(this.images[0].imageUrl);
+    if (this.images.length > 0) {
+      this.preLoad(this.images[0].imageUrl);
+    }
   },
   watch: {
     index(value) {

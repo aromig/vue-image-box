@@ -10,6 +10,13 @@ describe("Images Array", () => {
     images = [{ imageUrl: "xxxx", thumbUrl: "xxxx", caption: "xxxx" }];
   });
 
+  test("If no records, do not preload the first image", () => {
+    wrapper = shallowMount(VueImageBox, {
+      localVue,
+      propsData: { images: [], index: null }
+    });
+  });
+
   test("If only one record, hasMultipleImages is false", () => {
     wrapper = shallowMount(VueImageBox, {
       localVue,
