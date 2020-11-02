@@ -138,10 +138,10 @@ export default {
   },
   computed: {
     imageUrl() {
-      return this.images[this.imageIndex].imageUrl;
+      return this.imageIndex !== null ? this.images[this.imageIndex].imageUrl : '';
     },
     imageCaption() {
-      return this.images[this.imageIndex].caption;
+      return this.imageIndex !== null ? this.images[this.imageIndex].caption : '';
     },
     hasMultipleImages() {
       return this.images.length > 1;
