@@ -71,6 +71,7 @@ export default {
 
     // Preload the previous / next images from clicked image
     window.addEventListener("click", e => {
+      if (this.imageIndex === null) return;
       if (this.imageIndex === 0) {
         this.preLoad(
           this.images[this.images.length - 1].imageUrl,
@@ -97,6 +98,7 @@ export default {
   watch: {
     index(value) {
       this.imageIndex = value;
+
     }
   },
   methods: {
@@ -138,10 +140,10 @@ export default {
   },
   computed: {
     imageUrl() {
-      return this.images[this.imageIndex].imageUrl;
+      return this.imageIndex !== null ? this.images[this.imageIndex].imageUrl : '';
     },
     imageCaption() {
-      return this.images[this.imageIndex].caption;
+      return this.imageIndex !== null ? this.images[this.imageIndex].caption : '';
     },
     hasMultipleImages() {
       return this.images.length > 1;
